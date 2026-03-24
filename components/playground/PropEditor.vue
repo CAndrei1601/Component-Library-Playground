@@ -1,11 +1,11 @@
 <template>
-  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+  <div class="space-y-3">
     <div
       v-for="prop in propDefs"
       :key="prop.name"
       class="prop-control"
     >
-      <!-- Boolean: Toggle switch -->
+      <!-- Boolean: Toggle -->
       <template v-if="prop.type === 'boolean'">
         <UiToggle
           :label="formatLabel(prop.name)"
@@ -15,7 +15,7 @@
         />
       </template>
 
-      <!-- Select: Dropdown -->
+      <!-- Select -->
       <template v-else-if="prop.type === 'select'">
         <label>{{ formatLabel(prop.name) }}</label>
         <select
@@ -27,7 +27,7 @@
         </select>
       </template>
 
-      <!-- Number: Range/number input -->
+      <!-- Number -->
       <template v-else-if="prop.type === 'number'">
         <label>{{ formatLabel(prop.name) }}</label>
         <input
@@ -38,7 +38,7 @@
         />
       </template>
 
-      <!-- String: Text input -->
+      <!-- String -->
       <template v-else>
         <label>{{ formatLabel(prop.name) }}</label>
         <input
@@ -48,6 +48,11 @@
           @input="update(prop.name, ($event.target as HTMLInputElement).value)"
         />
       </template>
+
+      <!-- Description tooltip -->
+      <p v-if="prop.description" class="text-xs leading-relaxed" style="color: var(--color-text-subtle); font-size: 0.7rem">
+        {{ prop.description }}
+      </p>
     </div>
   </div>
 </template>

@@ -1,15 +1,14 @@
 <template>
-  <div class="flex items-center gap-1.5">
+  <div class="flex items-center gap-1 p-0.5 rounded-xl border border-token bg-secondary" role="group" aria-label="Theme switcher">
     <button
       v-for="t in themes"
       :key="t.value"
-      :class="['theme-btn', { active: theme === t.value }]"
+      :class="['theme-btn text-xs', { active: theme === t.value }]"
       :aria-label="`Switch to ${t.label} theme`"
+      :aria-pressed="theme === t.value"
       @click="setTheme(t.value)"
     >
-      <span :style="{ color: t.value === theme ? 'var(--color-primary)' : 'var(--color-text-muted)' }">
-        <component :is="t.icon" />
-      </span>
+      <component :is="t.icon" />
       <span>{{ t.label }}</span>
     </button>
   </div>
@@ -22,7 +21,7 @@ const { theme, setTheme } = useTheme()
 
 const SunIcon = defineComponent({
   render: () =>
-    h('svg', { width: 14, height: 14, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', 'stroke-width': 2, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }, [
+    h('svg', { width: 12, height: 12, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', 'stroke-width': 2, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }, [
       h('circle', { cx: 12, cy: 12, r: 5 }),
       h('line', { x1: 12, y1: 1, x2: 12, y2: 3 }),
       h('line', { x1: 12, y1: 21, x2: 12, y2: 23 }),
@@ -37,15 +36,15 @@ const SunIcon = defineComponent({
 
 const MoonIcon = defineComponent({
   render: () =>
-    h('svg', { width: 14, height: 14, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', 'stroke-width': 2, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }, [
+    h('svg', { width: 12, height: 12, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', 'stroke-width': 2, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }, [
       h('path', { d: 'M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z' }),
     ]),
 })
 
 const SparkleIcon = defineComponent({
   render: () =>
-    h('svg', { width: 14, height: 14, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', 'stroke-width': 2, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }, [
-      h('path', { d: 'M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z' }),
+    h('svg', { width: 12, height: 12, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', 'stroke-width': 2, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }, [
+      h('path', { d: 'M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9z' }),
     ]),
 })
 

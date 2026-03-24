@@ -1,6 +1,6 @@
 <template>
   <div class="preview-box" :style="bgOverride ? { backgroundColor: bgOverride } : {}">
-    <div class="relative z-10 flex flex-col items-center justify-center gap-4 w-full max-w-md">
+    <div class="relative z-10 flex flex-col items-center justify-center gap-4 w-full max-w-lg">
       <slot />
     </div>
   </div>
