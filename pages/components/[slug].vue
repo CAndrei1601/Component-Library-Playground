@@ -11,31 +11,51 @@
     </nav>
 
     <!-- Header -->
-    <div class="flex flex-wrap items-start justify-between gap-4 mb-8">
-      <div>
-        <div class="flex items-center gap-2.5 mb-2">
+    <div class="mb-6">
+      <div class="flex items-start justify-between gap-3 mb-2">
+        <div class="flex items-center gap-2.5 min-w-0">
           <div
-            class="w-8 h-8 rounded-lg flex items-center justify-center text-base border border-token"
+            class="w-8 h-8 rounded-lg flex items-center justify-center text-base border border-token flex-shrink-0"
             style="background-color: var(--color-surface-raised)"
           >{{ componentData.icon }}</div>
-          <h1 class="page-title">{{ componentData.name }}</h1>
-          <UiBadge :label="componentData.category" variant="info" size="sm" />
+          <h1 class="page-title truncate">{{ componentData.name }}</h1>
+          <UiBadge :label="componentData.category" variant="info" size="sm" class="flex-shrink-0" />
         </div>
-        <p class="text-sm leading-relaxed" style="color: var(--color-text-muted); max-width: 560px">
-          {{ componentData.description }}
-        </p>
+        <!-- Prev / Next — hidden on mobile, visible sm+ -->
+        <div class="hidden sm:flex items-center gap-2 flex-shrink-0">
+          <NuxtLink v-if="prevComponent" :to="`/components/${prevComponent.slug}`">
+            <UiButton variant="outline" size="sm">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="15 18 9 12 15 6"/>
+              </svg>
+              {{ prevComponent.name }}
+            </UiButton>
+          </NuxtLink>
+          <NuxtLink v-if="nextComponent" :to="`/components/${nextComponent.slug}`">
+            <UiButton variant="outline" size="sm">
+              {{ nextComponent.name }}
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="9 18 15 12 9 6" transform="rotate(180 12 12)"/>
+              </svg>
+            </UiButton>
+          </NuxtLink>
+        </div>
       </div>
-      <div class="flex items-center gap-2">
-        <NuxtLink v-if="prevComponent" :to="`/components/${prevComponent.slug}`">
-          <UiButton variant="outline" size="sm">
+      <p class="text-sm leading-relaxed" style="color: var(--color-text-muted); max-width: 560px">
+        {{ componentData.description }}
+      </p>
+      <!-- Prev / Next — mobile only, below description -->
+      <div class="flex items-center gap-2 mt-3 sm:hidden">
+        <NuxtLink v-if="prevComponent" :to="`/components/${prevComponent.slug}`" class="flex-1">
+          <UiButton variant="outline" size="sm" :full-width="true">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
               <polyline points="15 18 9 12 15 6"/>
             </svg>
             {{ prevComponent.name }}
           </UiButton>
         </NuxtLink>
-        <NuxtLink v-if="nextComponent" :to="`/components/${nextComponent.slug}`">
-          <UiButton variant="outline" size="sm">
+        <NuxtLink v-if="nextComponent" :to="`/components/${nextComponent.slug}`" class="flex-1">
+          <UiButton variant="outline" size="sm" :full-width="true">
             {{ nextComponent.name }}
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
               <polyline points="9 18 15 12 9 6" transform="rotate(180 12 12)"/>
@@ -45,13 +65,31 @@
       </div>
     </div>
 
+    <!-- ── Mobile Tab Bar ──────────────────────────────────────────── -->
+    <div class="flex xl:hidden gap-0 mb-5 rounded-xl overflow-hidden border border-token" style="background-color: var(--color-surface)">
+      <button
+        v-for="tab in mobileTabs"
+        :key="tab.id"
+        class="flex-1 py-2.5 text-xs font-medium transition-colors"
+        :style="{
+          color: mobileTab === tab.id ? 'var(--color-primary)' : 'var(--color-text-muted)',
+          backgroundColor: mobileTab === tab.id ? 'var(--color-primary-subtle)' : 'transparent',
+          borderRight: tab.id !== 'props' ? '1px solid var(--color-border)' : 'none',
+        }"
+        @click="mobileTab = tab.id"
+      >
+        {{ tab.label }}
+      </button>
+    </div>
+
     <!-- ── Playground ──────────────────────────────────────────────── -->
     <div class="grid grid-cols-1 xl:grid-cols-5 gap-5 mb-12">
 
       <!-- Preview + Code (left 3/5) -->
-      <div class="xl:col-span-3 flex flex-col gap-4">
-        <!-- Live Preview -->
-        <div>
+      <div class="xl:col-span-3 flex flex-col gap-4" :class="{ 'hidden xl:flex': mobileTab !== 'preview' && mobileTab !== 'code' }">
+
+        <!-- Live Preview — hidden on mobile when not on preview tab -->
+        <div :class="{ 'hidden xl:block': mobileTab === 'code' }">
           <p class="section-title">Preview</p>
           <PlaygroundPreviewBox>
             <template v-if="slug === 'modal'">
@@ -129,22 +167,24 @@
           </PlaygroundPreviewBox>
         </div>
 
-        <!-- Code Snippet -->
-        <div>
+        <!-- Code Snippet — hidden on mobile when not on code tab -->
+        <div :class="{ 'hidden xl:block': mobileTab === 'preview' }">
           <p class="section-title">Code</p>
           <PlaygroundCodeViewer :code="codeSnippet" />
         </div>
       </div>
 
-      <!-- Prop Editor (right 2/5) -->
-      <div class="xl:col-span-2">
+      <!-- Prop Editor (right 2/5) — hidden on mobile unless props tab active -->
+      <div class="xl:col-span-2" :class="{ 'hidden xl:block': mobileTab !== 'props' }">
         <div class="flex items-center justify-between mb-2.5">
           <p class="section-title mb-0">Props</p>
           <button
             class="text-xs font-medium transition-colors"
             style="color: var(--color-text-subtle)"
             @click="resetProps"
-          >Reset</button>
+          >
+            Reset
+          </button>
         </div>
         <div
           class="rounded-xl border border-token p-4"
@@ -162,35 +202,38 @@
     <!-- ── Props Reference ──────────────────────────────────────────── -->
     <section class="mb-10">
       <h2 class="page-title text-lg mb-4">Props API</h2>
+      <!-- Scrollable wrapper for mobile -->
       <div class="rounded-xl border border-token overflow-hidden">
-        <table class="props-table">
-          <thead>
-            <tr>
-              <th>Prop</th>
-              <th>Type</th>
-              <th>Default</th>
-              <th>Required</th>
-              <th>Description</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="prop in componentData.props" :key="prop.name">
-              <td><code>{{ prop.name }}</code></td>
-              <td>
-                <code>{{ prop.type }}</code>
-                <span v-if="prop.options" class="block text-xs mt-0.5" style="color: var(--color-text-subtle); font-family: var(--font-mono); font-size: 0.7rem">
-                  {{ prop.options.map(o => `"${o}"`).join(' | ') }}
-                </span>
-              </td>
-              <td><code v-if="prop.default !== undefined">{{ JSON.stringify(prop.default) }}</code><span v-else style="color: var(--color-text-subtle)">—</span></td>
-              <td>
-                <UiBadge v-if="prop.required" label="required" variant="error" size="sm" />
-                <span v-else style="color: var(--color-text-subtle)">—</span>
-              </td>
-              <td style="color: var(--color-text-muted)">{{ prop.description }}</td>
-            </tr>
-          </tbody>
-        </table>
+        <div class="overflow-x-auto">
+          <table class="props-table" style="min-width: 560px">
+            <thead>
+              <tr>
+                <th>Prop</th>
+                <th>Type</th>
+                <th>Default</th>
+                <th class="hidden sm:table-cell">Required</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="prop in componentData.props" :key="prop.name">
+                <td><code>{{ prop.name }}</code></td>
+                <td>
+                  <code>{{ prop.type }}</code>
+                  <span v-if="prop.options" class="block text-xs mt-0.5" style="color: var(--color-text-subtle); font-family: var(--font-mono); font-size: 0.7rem">
+                    {{ prop.options.map(o => `"${o}"`).join(' | ') }}
+                  </span>
+                </td>
+                <td><code v-if="prop.default !== undefined">{{ JSON.stringify(prop.default) }}</code><span v-else style="color: var(--color-text-subtle)">—</span></td>
+                <td class="hidden sm:table-cell">
+                  <UiBadge v-if="prop.required" label="required" variant="error" size="sm" />
+                  <span v-else style="color: var(--color-text-subtle)">—</span>
+                </td>
+                <td style="color: var(--color-text-muted)">{{ prop.description }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </section>
 
@@ -210,7 +253,7 @@
           <li
             v-for="(note, i) in componentData.accessibilityNotes"
             :key="i"
-            class="flex items-start gap-3 px-5 py-3.5"
+            class="flex items-start gap-3 px-4 sm:px-5 py-3.5"
             :style="i < componentData.accessibilityNotes.length - 1 ? 'border-bottom: 1px solid var(--color-border)' : ''"
           >
             <svg class="flex-shrink-0 mt-0.5" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color: var(--color-success)">
@@ -244,6 +287,7 @@
 </template>
 
 <script setup lang="ts">
+import { ref, computed, watch, resolveComponent } from 'vue'
 import { allComponents } from '~/data/components'
 import { generateCode } from '~/utils/codeGen'
 
@@ -258,6 +302,18 @@ useHead(computed(() => ({
   title: componentData.value ? `${componentData.value.name} — Forma` : 'Not Found — Forma',
   meta: [{ name: 'description', content: componentData.value?.description ?? 'Component not found.' }],
 })))
+
+// Mobile tab state
+type MobileTab = 'preview' | 'code' | 'props'
+const mobileTab = ref<MobileTab>('preview')
+const mobileTabs: { id: MobileTab; label: string }[] = [
+  { id: 'preview', label: 'Preview' },
+  { id: 'code', label: 'Code' },
+  { id: 'props', label: 'Props' },
+]
+
+// Reset mobile tab when component changes
+watch(slug, () => { mobileTab.value = 'preview' })
 
 // Prop state
 const currentProps = ref<Record<string, string | boolean | number>>({})

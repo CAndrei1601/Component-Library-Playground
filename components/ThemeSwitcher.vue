@@ -1,15 +1,15 @@
 <template>
-  <div class="flex items-center gap-1 p-0.5 rounded-xl border border-token bg-secondary" role="group" aria-label="Theme switcher">
+  <div class="flex items-center gap-0.5 p-0.5 rounded-xl border border-token bg-secondary" role="group" aria-label="Theme switcher">
     <button
       v-for="t in themes"
       :key="t.value"
-      :class="['theme-btn text-xs', { active: theme === t.value }]"
+      :class="['theme-btn', { active: theme === t.value }]"
       :aria-label="`Switch to ${t.label} theme`"
       :aria-pressed="theme === t.value"
       @click="setTheme(t.value)"
     >
       <component :is="t.icon" />
-      <span>{{ t.label }}</span>
+      <span class="hidden sm:inline">{{ t.label }}</span>
     </button>
   </div>
 </template>

@@ -12,7 +12,7 @@
 
       <!-- Headline -->
       <h1 class="heading-1 mb-5 relative z-10" style="max-width: 680px">
-        A design system built for<br />
+        A design system built for
         <span class="text-gradient">modern Vue apps</span>
       </h1>
 
@@ -135,7 +135,7 @@
         style="background-color: var(--color-surface)"
       >
         <p class="text-sm font-medium mb-4" style="color: var(--color-text)">Color scale — Primary</p>
-        <div class="grid grid-cols-6 gap-2 mb-5">
+        <div class="grid grid-cols-3 sm:grid-cols-6 gap-2 mb-5">
           <div v-for="swatch in colorSwatches" :key="swatch.name" class="space-y-1.5">
             <div
               class="h-8 rounded-lg border border-token"
@@ -169,7 +169,10 @@
 </template>
 
 <script setup lang="ts">
+import { defineComponent, h } from 'vue'
 import { componentCategories } from '~/data/components'
+
+
 
 useHead({
   title: 'Forma — Vue Design System',

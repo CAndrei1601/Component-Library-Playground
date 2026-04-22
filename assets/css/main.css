@@ -285,10 +285,14 @@ body {
 }
 
 .page-title {
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   font-weight: 700;
   color: var(--color-text);
   letter-spacing: -0.025em;
+}
+
+@media (min-width: 640px) {
+  .page-title { font-size: 1.5rem; }
 }
 
 .section-title {
@@ -454,15 +458,22 @@ body {
   background-color: var(--color-bg-secondary);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-xl);
-  padding: 3rem 2rem;
+  padding: 2rem 1.25rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 200px;
+  min-height: 180px;
   position: relative;
   overflow: hidden;
   background-image: radial-gradient(circle, var(--color-border) 1px, transparent 1px);
   background-size: 20px 20px;
+}
+
+@media (min-width: 640px) {
+  .preview-box {
+    padding: 3rem 2rem;
+    min-height: 200px;
+  }
 }
 
 .preview-box::before {

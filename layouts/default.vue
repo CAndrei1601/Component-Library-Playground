@@ -46,7 +46,7 @@
       </header>
 
       <!-- Page Content -->
-      <main class="flex-1 px-6 py-10 max-w-5xl mx-auto w-full">
+      <main class="flex-1 px-4 py-6 sm:px-6 sm:py-10 max-w-5xl mx-auto w-full">
         <slot />
       </main>
     </div>
@@ -54,5 +54,7 @@
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue'
+
 const drawerOpen = ref(false)
 </script>
