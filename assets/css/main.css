@@ -354,8 +354,8 @@ body {
   position: sticky;
   top: 0;
   overflow-y: auto;
-  display: flex;
-  flex-direction: column;
+  /* display and flex-direction are controlled by Tailwind utility classes
+     in the layout so that `hidden` can properly override on mobile */
 }
 
 .sidebar-nav-link {

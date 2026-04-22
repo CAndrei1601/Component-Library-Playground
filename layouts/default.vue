@@ -1,7 +1,7 @@
 <template>
   <div class="flex min-h-screen bg-token">
     <!-- Desktop Sidebar -->
-    <aside class="sidebar hidden lg:flex" aria-label="Main navigation">
+    <aside class="sidebar hidden lg:flex lg:flex-col" aria-label="Main navigation">
       <AppSidebar />
     </aside>
 
