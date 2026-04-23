@@ -12,7 +12,8 @@
     <div class="flex-1 flex flex-col min-w-0">
       <!-- Top bar -->
       <header
-        class="sticky top-0 z-30 flex items-center justify-between px-4 h-14 border-b border-token"
+        class="sticky top-0 z-30 flex items-center justify-between px-4 h-14 border-b border-token transition-shadow duration-200"
+        :class="{ 'header-scrolled': scrolled }"
         style="backdrop-filter: blur(12px) saturate(180%); background-color: color-mix(in srgb, var(--color-bg) 80%, transparent);"
       >
         <!-- Mobile: hamburger + logo -->
@@ -54,7 +55,20 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, watch, onMounted, onUnmounted } from 'vue'
 
 const drawerOpen = ref(false)
+const scrolled = ref(false)
+const route = useRoute()
+
+watch(() => route.fullPath, () => {
+  drawerOpen.value = false
+})
+
+function onScroll() {
+  scrolled.value = window.scrollY > 4
+}
+
+onMounted(() => window.addEventListener('scroll', onScroll, { passive: true }))
+onUnmounted(() => window.removeEventListener('scroll', onScroll))
 </script>
